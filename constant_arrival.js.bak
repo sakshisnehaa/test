@@ -1,0 +1,22 @@
+import { sleep, check } from "k6";
+import http from "k6/http";
+
+export const options = {
+    scenarios: {
+         constant_arrival_scenario: {
+             executor: "constant-arrival-rate",
+             rate: 5,
+             duration: '20s',
+             preAllocatedVUs: 5,
+             maxVUs: 10,
+         },
+    },
+};
+
+export default function () {
+    const res = http.get("https://onlineboutique.dev");
+    sleep(1);
+    check(res, {
+        'is status 200': r => r.status === 200,
+    });
+}
